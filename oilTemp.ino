@@ -1,14 +1,14 @@
 // Portal Temp
 const int tempPortalPin = A0;
 const int ledPortalPin = 4;             // Channel 2 for Portal Oil Temp
-const float TEMP_PORTAL_ON = 70.0;      // Portal Temp threshold ON (°F)   CHANGE TO 240
-const float TEMP_PORTAL_OFF = 60.0;     // Portal Temp threshold OFF (°F)  CHANGE TO 235
+const float TEMP_PORTAL_ON = 70.0;      // Portal Temp threshold ON (°F)   CHANGE TO 285
+const float TEMP_PORTAL_OFF = 60.0;     // Portal Temp threshold OFF (°F)  CHANGE TO 245
 float portalTemp = 0.0;                 // Globally define portalTemp
 // Gearbox Temp
 const int tempGearboxPin = A1;
 const int ledGearboxPin = 5;            // Channel 3 for Gearbox Oil Temp
-const float TEMP_GEARBOX_ON = 70.0;     // Gearbox Temp threshold ON (°F)  CHANGE TO 240
-const float TEMP_GEARBOX_OFF = 60.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 235
+const float TEMP_GEARBOX_ON = 70.0;     // Gearbox Temp threshold ON (°F)  CHANGE TO 285
+const float TEMP_GEARBOX_OFF = 60.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 245
 float gearboxTemp = 0.0;                // Globally define gearboxTemp
 // Lookup Table
 const int lookupTableSize = 32;
@@ -80,15 +80,24 @@ void calculateRifeData() {
  
   // Portal Temp
   if (portalTemp > TEMP_PORTAL_ON) {
-    analogWrite(ledPortalPin, 80);             // Full brightness
+    analogWrite(ledPortalPin, 15);
+  // } else if (portalTemp < TEMP_PORTAL_ON && portalTemp > TEMP_PORTAL_OFF) {
+  //   analogWrite(ledPortalPin, 15);
+  //   delay(10);
+  //   analogWrite(ledPortalPin, 0);
   } else if (portalTemp < TEMP_PORTAL_OFF) {
-    analogWrite(ledPortalPin, 0);              // Turn off
+    analogWrite(ledPortalPin, 0);      
   }
+
   // Gearbox Temp
   if (gearboxTemp > TEMP_GEARBOX_ON) {
-    analogWrite(ledGearboxPin, 80);            // Full brightness
+    analogWrite(ledGearboxPin, 15);
+  // } else if (gearboxTemp < TEMP_GEARBOX_ON && gearboxTemp > TEMP_GEARBOX_OFF) {
+  //   analogWrite(ledGearboxPin, 15);
+  //   delay(10);
+  //   analogWrite(ledGearboxPin, 0);
   } else if (gearboxTemp < TEMP_GEARBOX_OFF) {
-    analogWrite(ledGearboxPin, 0);             // Turn off
+    analogWrite(ledGearboxPin, 0);
   }
 }
 
