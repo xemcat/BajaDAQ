@@ -40,13 +40,10 @@ void calculateRifeData();
 void hallInit();            // Vehicle Speed
 void calculateHallData();
 void displayHallData();
-//void stepperInit();         // Stepper Motor and Limit Switch
-//void rotateMotor(int stepsToMove, bool forward);
-//void stopMotor();
-//void processSensorInput(float vehicleSpeed);
-//void controlMotor();
-//void rotateMotor();
-//void stopMotor();
+void stepperInit();         // Stepper Motor and Limit Switch
+void rotateMotor(int stepsToMove, bool forward);
+void stopMotor();
+void processSensorInput(float vehicleSpeed);
 //void nanoInit();            // Arduino Nano
 //void nanoCommunication();
 
@@ -67,8 +64,8 @@ void setup() {
   Serial.println("RIFE done");
   hallInit();         // Initialize Hall Effect
   Serial.println("HALL done");
-  //stepperInit();      // Initialize Stepper and Limit Switch
-  //Serial.println("STEP done");
+  stepperInit();      // Initialize Stepper and Limit Switch
+  Serial.println("STEP done");
 
   fileName = generateFileName();
   initDataLogger(fileName);
@@ -78,7 +75,7 @@ void setup() {
 
 void loop() {
   float vehicleSpeed = getVehicleSpeed();  // Get speed from Hall sensor
-  //processSensorInput(vehicleSpeed);        // Pass speed to stepper control
+  processSensorInput(vehicleSpeed);        // Pass speed to stepper control
 
   int switchState = digitalRead(switchPin); // Read the switch state
   if (switchState == LOW) {
