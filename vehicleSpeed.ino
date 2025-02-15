@@ -1,4 +1,4 @@
-#define hallSensorPin 6                   // Pin connected to the Hall effect sensor 
+#define hallSensorPin 6                     // Pin connected to the Hall effect sensor 
 volatile unsigned long lastPulseTime = 0;   // Timestamp of the last pulse
 volatile unsigned long pulseInterval = 0;   // Time between two consecutive pulses
 float wheelCircumference = 2.1;             // Circumference of the wheel in meters
@@ -26,12 +26,12 @@ void hallSensorISR() {
 }
 
 void hallInit() {
-  if (!digitalRead(hallSensorPin)) {
-    Serial.println("Error: Could not find a valid Hall Effect sensor!");
-    //while (1);                            // Stop execution if initialization fails
-  }
   pinMode(hallSensorPin, INPUT_PULLUP);           // Configure the Hall sensor pin
   attachInterrupt(digitalPinToInterrupt(hallSensorPin), hallSensorISR, FALLING); // Attach interrupt
+  if (!digitalRead(hallSensorPin)) {
+    Serial.println("Error: Could not find a valid Hall Effect sensor!");
+    // while (1);                            // Stop execution if initialization fails
+  }
 }
 
 void calculateHallData() {
@@ -52,7 +52,6 @@ void calculateHallData() {
 }
 
 void displayHallData() {
-  //Serial.print("Vehicle Speed: "); Serial.print(vehicleSpeed); Serial.println(" mph");
   Serial.println("Vehicle Speed:");
   Serial.print("   Speed: "); Serial.print(vehicleSpeed); Serial.println(" mph");
   Serial.print("   Magnet Count: "); Serial.println(magnetCount);
