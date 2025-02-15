@@ -8,13 +8,9 @@
 // Step sequence for one full step
 int steps[8][4] = {
   {LOW, LOW, LOW, HIGH},  // Step 1
-  {LOW, LOW, HIGH, HIGH}, // Step 2
-  {LOW, LOW, HIGH, LOW},  // Step 3
-  {LOW, HIGH, HIGH, LOW}, // Step 4
-  {LOW, HIGH, LOW, LOW},  // Step 5
-  {HIGH, HIGH, LOW, LOW}, // Step 6
-  {HIGH, LOW, LOW, LOW},  // Step 7
-  {HIGH, LOW, LOW, HIGH}  // Step 8
+  {LOW, LOW, HIGH, LOW},  // Step 2
+  {LOW, HIGH, LOW, LOW},  // Step 3
+  {HIGH, LOW, LOW, LOW},  // Step 4
 };
 
 const int stepMultiplier = 8;  // 8 steps for each mph
@@ -40,10 +36,10 @@ void stepperInit() {
 
 void rotateMotor(int stepsToMove, bool forward) {
   for (int i = 0; i < stepsToMove; i++) {
-    int startStep = forward ? 0 : 7;
+    int startStep = forward ? 0 : 3;
     int stepIncrement = forward ? 1 : -1;
 
-    for (int step = startStep; (forward ? step < 8 : step >= 0); step += stepIncrement) {
+    for (int step = startStep; (forward ? step < 4 : step >= 0); step += stepIncrement) {
       digitalWrite(IN1_PIN, steps[step][0]);
       digitalWrite(IN2_PIN, steps[step][1]);
       digitalWrite(IN3_PIN, steps[step][2]);
