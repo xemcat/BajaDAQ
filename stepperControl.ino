@@ -2,10 +2,8 @@
 #define IN2_PIN 8
 #define IN3_PIN 9
 #define IN4_PIN 10
-
 #define LIMIT_SWITCH_PIN 20  // Limit switch input pin
 
-// Step sequence for one full step
 int steps[8][4] = {
   {LOW, LOW, LOW, HIGH},  // Step 1
   {LOW, LOW, HIGH, LOW},  // Step 2
