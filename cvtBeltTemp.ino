@@ -9,7 +9,7 @@ float ambientTemp = 0.0;              // Globally define ambientTemp
 void mlxInit() {
   if (!mlx.begin()) {
     Serial.println("Error: Could not find a valid MLX90614 sensor!");
-    while (1);                        // Stop execution if initialization fails
+    //while (1);                        // Stop execution if initialization fails
   }
   pinMode(ledCVTPin, OUTPUT);
   analogWrite(ledCVTPin, 0);          // Ensure LED is off at the start
@@ -28,7 +28,7 @@ void calculateMLXData() {
   if (cvtTemp > TEMP_CVT_ON) {
     analogWrite(ledCVTPin, 15);
   // } else if (cvtTemp < TEMP_CVT_ON && cvtTemp > TEMP_CVT_OFF) {
-  //   analogWrite(ledCVTPin, 15);
+  //   analogWrite(ledCVTPin, 15);   //make bool to toggle on off
   //   delay(10);
   //   analogWrite(ledCVTPin, 0);
   } else if (cvtTemp < TEMP_CVT_OFF) {
