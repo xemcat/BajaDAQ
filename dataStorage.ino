@@ -16,13 +16,12 @@ void initDataLogger(String fileName) {
 }
 
 String generateFileName() {
-  // Set up a simulated date/time (replace with RTC if available)
-  setTime(1652884800); // Example epoch time, adjust for your setup
-
+  DateTime now = rtc.now();
   // Format the file name as yyyy_mm_dd_hh_mm_ss.csv
   char buffer[25];
-  snprintf(buffer, sizeof(buffer), "%04d_%02d_%02d_%02d_%02d_%2d.csv",
-           year(), month(), day(), hour(), minute(), second());
+  snprintf(buffer, sizeof(buffer), "%04d_%02d_%02d_%02d_%02d.csv",
+           now.year(), now.month(), now.day(),
+           now.hour(), now.minute());
   return String(buffer);
 }
 
