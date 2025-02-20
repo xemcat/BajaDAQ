@@ -13,21 +13,12 @@ Adafruit_MPU6050 mpu = Adafruit_MPU6050();
 RTC_DS3231 rtc;
 String fileName;
 
-// int steps[8][4] = {
-//   {LOW, LOW, LOW, HIGH},  // Step 1
-//   {LOW, LOW, HIGH, HIGH}, // Step 2
-//   {LOW, LOW, HIGH, LOW},  // Step 3
-//   {LOW, HIGH, HIGH, LOW}, // Step 4
-//   {LOW, HIGH, LOW, LOW},  // Step 5
-//   {HIGH, HIGH, LOW, LOW}, // Step 6
-//   {HIGH, LOW, LOW, LOW},  // Step 7
-//   {HIGH, LOW, LOW, HIGH}  // Step 8
-// };
-
 // Define Data Switch
-const int switchPin = 2;       // Use pin 2 for the switch
+const int dataSwitchPin = 2;       // Use pin 2 for the switch
 bool collectingData = false;   // Flag for data collection
-unsigned long startTime = 0;   // Store the start time
+unsigned long startDataTime = 0;   // Store the start time
+
+//const int systemTime = 0;
 
 // Forward declarations
 void mlxInit();             // CVT Temperature
@@ -69,19 +60,18 @@ void setup() {
 
   fileName = generateFileName();
   initDataLogger(fileName);
-  pinMode(switchPin, INPUT_PULLUP);     // Configure switch pin with pull-up
+  pinMode(dataSwitchPin, INPUT_PULLUP);     // Configure switch pin with pull-up
   Serial.println("Flip the switch to start or stop data collection.");
 }
 
 void loop() {
   float vehicleSpeed = getVehicleSpeed();  // Get speed from Hall sensor
   processSensorInput(vehicleSpeed);        // Pass speed to stepper control
-
-  int switchState = digitalRead(switchPin); // Read the switch state
+  int switchState = digitalRead(dataSwitchPin); // Read the switch state
   if (switchState == LOW) {
     if (!collectingData) {
       collectingData = true;
-      startTime = millis();
+      startDataTime = millis();
       Serial.println("Data collection started."); 
     }
   } else {
@@ -104,9 +94,10 @@ void loop() {
     float gearboxTemp = getGearboxTemp();
     float pitch = getVehiclePitch();
     float roll = getVehicleRoll();
-    unsigned long timeElapsed = millis() - startTime;
+    float speed = getVehicleSpeed();
+    unsigned long timeElapsed = millis() - startDataTime;
 
-    logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, vehicleSpeed);
-    delay(1000);
+    logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+    //delay(systemTime);
   }
 }
