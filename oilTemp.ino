@@ -23,7 +23,7 @@ const float analogMax = 1023;               // Max analog value read from sensor
 void rifeInit() {
   if (!analogRead(tempPortalPin)) {
     Serial.println("Error: Could not find a valid RIFE portal sensor!");
-    while (1);                              // Stop execution if initialization fails
+    //while (1);                              // Stop execution if initialization fails
   }
   // Portal Temp
   pinMode(ledPortalPin, OUTPUT);
