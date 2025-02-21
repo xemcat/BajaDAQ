@@ -96,7 +96,7 @@ void loop() {
     unsigned long timeElapsed = millis() - startDataTime;
     //unsigned long startDataTime = startDataTime;
 
-    logData(fileName, timeElapsed, startDataTime, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+    logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
     delay(1000);
   }
 }
