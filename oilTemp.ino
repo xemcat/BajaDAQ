@@ -4,12 +4,16 @@ const int ledPortalPin = 4;             // Channel 2 for Portal Oil Temp
 const float TEMP_PORTAL_ON = 70.0;      // Portal Temp threshold ON (°F)   CHANGE TO 285
 const float TEMP_PORTAL_OFF = 60.0;     // Portal Temp threshold OFF (°F)  CHANGE TO 245
 float portalTemp = 0.0;                 // Globally define portalTemp
+bool blinkPortal = false;
+int blinkPortalCount = 0;
 // Gearbox Temp
 const int tempGearboxPin = A1;
 const int ledGearboxPin = 5;            // Channel 3 for Gearbox Oil Temp
 const float TEMP_GEARBOX_ON = 70.0;     // Gearbox Temp threshold ON (°F)  CHANGE TO 285
 const float TEMP_GEARBOX_OFF = 60.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 245
 float gearboxTemp = 0.0;                // Globally define gearboxTemp
+bool blinkGearbox = false;
+int blinkGearboxCount = 0;
 // Lookup Table
 const int lookupTableSize = 32;
 const float rifeTemperatures[lookupTableSize] = {-20, -10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290};
@@ -81,10 +85,21 @@ void calculateRifeData() {
   // Portal Temp
   if (portalTemp > TEMP_PORTAL_ON) {
     analogWrite(ledPortalPin, 15);
-  // } else if (portalTemp < TEMP_PORTAL_ON && portalTemp > TEMP_PORTAL_OFF) {
-  //   analogWrite(ledPortalPin, 15);
-  //   delay(10);
-  //   analogWrite(ledPortalPin, 0);
+  } else if (portalTemp < TEMP_PORTAL_ON && portalTemp > TEMP_PORTAL_OFF) {
+    if (!blinkPortal) {
+      analogWrite(ledPortalPin, 15);
+      blinkPortalCount = blinkPortalCount + 1;
+      if (blinkPortalCount == 3) {
+        blinkPortal = true;
+      }
+    }
+    if (blinkPortal) {
+      analogWrite(ledPortalPin, 0);
+      blinkPortalCount = blinkPortalCount - 1;
+      if (blinkPortalCount == 0) {
+        blinkPortal = false;
+      }
+    }
   } else if (portalTemp < TEMP_PORTAL_OFF) {
     analogWrite(ledPortalPin, 0);      
   }
@@ -92,10 +107,21 @@ void calculateRifeData() {
   // Gearbox Temp
   if (gearboxTemp > TEMP_GEARBOX_ON) {
     analogWrite(ledGearboxPin, 15);
-  // } else if (gearboxTemp < TEMP_GEARBOX_ON && gearboxTemp > TEMP_GEARBOX_OFF) {
-  //   analogWrite(ledGearboxPin, 15);
-  //   delay(10);
-  //   analogWrite(ledGearboxPin, 0);
+  } else if (gearboxTemp < TEMP_GEARBOX_ON && gearboxTemp > TEMP_GEARBOX_OFF) {
+    if (!blinkGearbox) {
+      analogWrite(ledGearboxPin, 15);
+      blinkGearboxCount = blinkGearboxCount + 1;
+      if (blinkGearboxCount == 3) {
+        blinkGearbox = true;
+      }
+    }
+    if (blinkGearbox) {
+      analogWrite(ledGearboxPin, 0);
+      blinkGearboxCount = blinkGearboxCount - 1;
+      if (blinkGearboxCount == 0) {
+        blinkGearbox = false;
+      }
+    }
   } else if (gearboxTemp < TEMP_GEARBOX_OFF) {
     analogWrite(ledGearboxPin, 0);
   }
