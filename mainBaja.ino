@@ -14,11 +14,9 @@ RTC_DS3231 rtc;
 String fileName;
 
 // Define Data Switch
-const int dataSwitchPin = 2;       // Use pin 2 for the switch
-bool collectingData = false;   // Flag for data collection
-unsigned long startDataTime = 0;   // Store the start time
-
-//const int systemTime = 0;
+const int dataSwitchPin = 2;      // Use pin 2 for the switch
+bool collectingData = false;      // Flag for data collection
+unsigned long startDataTime = 0;  // Store the start time
 
 // Forward declarations
 void mlxInit();             // CVT Temperature
@@ -31,12 +29,12 @@ void calculateRifeData();
 void hallInit();            // Vehicle Speed
 void calculateHallData();
 void displayHallData();
-void stepperInit();         // Stepper Motor and Limit Switch
-void rotateMotor(int stepsToMove, bool forward);
-void stopMotor();
-void processSensorInput(float vehicleSpeed);
-//void nanoInit();            // Arduino Nano
-//void nanoCommunication();
+// void stepperInit();         // Stepper Motor and Limit Switch
+// void rotateMotor(int stepsToMove, bool forward);
+// void stopMotor();
+// void processSensorInput(float vehicleSpeed);
+// void nanoInit();            // Arduino Nano
+// void nanoCommunication();
 
 void setup() {
   Serial.begin(9600);
@@ -55,8 +53,8 @@ void setup() {
   Serial.println("RIFE done");
   hallInit();         // Initialize Hall Effect
   Serial.println("HALL done");
-  stepperInit();      // Initialize Stepper and Limit Switch
-  Serial.println("STEP done");
+  // stepperInit();      // Initialize Stepper and Limit Switch
+  // Serial.println("STEP done");
 
   fileName = generateFileName();
   initDataLogger(fileName);
@@ -65,8 +63,8 @@ void setup() {
 }
 
 void loop() {
-  float vehicleSpeed = getVehicleSpeed();  // Get speed from Hall sensor
-  processSensorInput(vehicleSpeed);        // Pass speed to stepper control
+  // float vehicleSpeed = getVehicleSpeed();  // Get speed from Hall sensor
+  // processSensorInput(vehicleSpeed);        // Pass speed to stepper control
   int switchState = digitalRead(dataSwitchPin); // Read the switch state
   if (switchState == LOW) {
     if (!collectingData) {
@@ -96,8 +94,9 @@ void loop() {
     float roll = getVehicleRoll();
     float speed = getVehicleSpeed();
     unsigned long timeElapsed = millis() - startDataTime;
+    //unsigned long startDataTime = startDataTime;
 
-    logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
-    //delay(systemTime);
+    logData(fileName, timeElapsed, startDataTime, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+    delay(1000);
   }
 }
