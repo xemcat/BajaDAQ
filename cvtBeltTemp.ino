@@ -33,7 +33,7 @@ void calculateMLXData() {
     if (!blinkCVT) {
       analogWrite(ledCVTPin, 15);
       blinkCVTCount = blinkCVTCount + 1;
-      if (blinkCVTCount == 3) {
+      if (blinkCVTCount == 5) {
         blinkCVT = true;
       }
     }

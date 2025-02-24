@@ -6,18 +6,22 @@ const float TEMP_PORTAL_OFF = 60.0;     // Portal Temp threshold OFF (°F)  CHAN
 float portalTemp = 0.0;                 // Globally define portalTemp
 bool blinkPortal = false;
 int blinkPortalCount = 0;
+
 // Gearbox Temp
 const int tempGearboxPin = A1;
 const int ledGearboxPin = 5;            // Channel 3 for Gearbox Oil Temp
 const float TEMP_GEARBOX_ON = 70.0;     // Gearbox Temp threshold ON (°F)  CHANGE TO 285
 const float TEMP_GEARBOX_OFF = 60.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 245
 float gearboxTemp = 0.0;                // Globally define gearboxTemp
+bool blinkingLEDGearbox = false;
 bool blinkGearbox = false;
 int blinkGearboxCount = 0;
+
 // Lookup Table
 const int lookupTableSize = 32;
 const float rifeTemperatures[lookupTableSize] = {-20, -10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290};
 const float rifeResistances[lookupTableSize] = {189726, 132092, 93425, 67059, 48804, 35983, 26855, 20274, 15473, 11929, 9287, 7295, 5781, 4618, 3718, 3016, 2463, 2025, 1675, 1395, 1167, 983, 832, 707, 604, 519, 447, 387, 336, 294, 257, 226};
+
 // Circuit Values
 const float inputVoltage = 3.01;            // Input voltage for sensor of 3.01V actual
 const float seriesResistancePortal = 983;   // Series portal resistor value of 1kΩ actual
@@ -89,7 +93,7 @@ void calculateRifeData() {
     if (!blinkPortal) {
       analogWrite(ledPortalPin, 15);
       blinkPortalCount = blinkPortalCount + 1;
-      if (blinkPortalCount == 3) {
+      if (blinkPortalCount == 5) {
         blinkPortal = true;
       }
     }
@@ -111,7 +115,7 @@ void calculateRifeData() {
     if (!blinkGearbox) {
       analogWrite(ledGearboxPin, 15);
       blinkGearboxCount = blinkGearboxCount + 1;
-      if (blinkGearboxCount == 3) {
+      if (blinkGearboxCount == 5) {
         blinkGearbox = true;
       }
     }
