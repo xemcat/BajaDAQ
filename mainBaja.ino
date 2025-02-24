@@ -46,15 +46,12 @@ void setup() {
   }
   Serial.println("Initializing");
   mlxInit();          // Initialize MLX90614
-  Serial.println("MLX done");
   mpuInit();          // Initialize MPU6050
-  Serial.println("MPU done");
   rifeInit();         // Initialize RIFE Portal
-  Serial.println("RIFE done");
   hallInit();         // Initialize Hall Effect
-  Serial.println("HALL done");
+  Serial.println("MLX MPU RIFE HALL done");
   // stepperInit();      // Initialize Stepper and Limit Switch
-  // Serial.println("STEP done");
+  // Serial.println("STEP LIMIT done");
 
   fileName = generateFileName();
   initDataLogger(fileName);
@@ -66,7 +63,7 @@ void loop() {
   // float vehicleSpeed = getVehicleSpeed();  // Get speed from Hall sensor
   // processSensorInput(vehicleSpeed);        // Pass speed to stepper control
   int switchState = digitalRead(dataSwitchPin); // Read the switch state
-  if (switchState == LOW) {
+  if (switchState == HIGH) {
     if (!collectingData) {
       collectingData = true;
       startDataTime = millis();

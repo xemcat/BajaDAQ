@@ -16,12 +16,11 @@ void initDataLogger(String fileName) {
 }
 
 String generateFileName() {
-  DateTime now = rtc.now();
-  // Format the file name as yyyy_mm_dd_hh_mm_ss.csv
   rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  //rtc.adjust(DateTime(2025, 2, 24, 12, 01, 0));
-  char buffer[25];
-  snprintf(buffer, sizeof(buffer), "%02d/%02d/%04d_%02d:%02d.csv",
+  DateTime now = rtc.now();
+  // Format the file name as mm.dd.yyyy_hhmm.csv
+  char buffer[24];
+  snprintf(buffer, sizeof(buffer), "%02d.%02d.%04d_%02d%02d.csv",
            now.month(), now.day(), now.year(), 
            now.hour(), now.minute());
   Serial.println(buffer);
