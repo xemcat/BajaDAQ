@@ -34,12 +34,12 @@ void displayHallData();
 void stepperInit();         // Stepper Motor and Limit Switch
 void processSensorInput(float vehicleSpeed);
 void moveEightSteps(bool forward);
-float getVehicleSpeed();    // From hall sensor file
-float getCVTTemp();         // Placeholder
-float getPortalTemp();      // Placeholder
-float getGearboxTemp();     // Placeholder
-float getVehiclePitch();    // Placeholder
-float getVehicleRoll();     // Placeholder
+float getVehicleSpeed();
+float getCVTTemp();
+float getPortalTemp();
+float getGearboxTemp();
+float getVehiclePitch();
+float getVehicleRoll();
 String getFormattedTime();
 
 void setup() {
@@ -110,27 +110,4 @@ void loop() {
     Serial.println("Data Logged ***************************************************************");
     delay(2000);
   }
-
-  // while(millis()-loopTime > 20) {
-  //   float cvtTemp = getCVTTemp();
-  //   float portalTemp = getPortalTemp();
-  //   float gearboxTemp = getGearboxTemp();
-  //   float pitch = getVehiclePitch();
-  //   float roll = getVehicleRoll();
-  //   float speed = getVehicleSpeed();
-  //   unsigned long timeElapsed = millis() - startDataTime;
-
-  //   logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
-  // }
-  // if (loopTime < logTime) {
-  //   float cvtTemp = getCVTTemp();
-  //   float portalTemp = getPortalTemp();
-  //   float gearboxTemp = getGearboxTemp();
-  //   float pitch = getVehiclePitch();
-  //   float roll = getVehicleRoll();
-  //   float speed = getVehicleSpeed();
-  //   unsigned long timeElapsed = millis() - startDataTime;
-
-  //   logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
-  //   //delay(1000); // Data logging interval
 }

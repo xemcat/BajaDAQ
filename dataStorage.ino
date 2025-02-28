@@ -16,7 +16,7 @@ void initDataLogger(String fileName) {
 }
 
 String generateFileName() {
-  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   DateTime now = rtc.now();
   // Format the file name as mm.dd.yyyy_hhmm.csv
   char buffer[24];

@@ -12,7 +12,7 @@ int steps[4][4] = {  // Extended to 8 steps for a full cycle (2 rotations of 4 s
 };
 
 const int stepMultiplier = 32;  // 8 steps = 1 mph
-const unsigned long stepInterval = 20;  // 20 ms between bursts
+const unsigned long stepInterval = 9;  // 20 ms between bursts
 int currentStepPosition = 0;   // Current position of the stepper in steps
 int targetStepPosition = 0;    // Target position based on vehicle speed
 unsigned long lastStepTime = 0; // Time of the last step burst
@@ -45,29 +45,29 @@ void moveEightSteps(bool forward) {
   if (forward) {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 4; j++) {
-        digitalWrite(IN1_PIN, steps[j][0]);
-        digitalWrite(IN2_PIN, steps[j][1]);
-        digitalWrite(IN3_PIN, steps[j][2]);
-        digitalWrite(IN4_PIN, steps[j][3]);
-        delay(2); // 2 ms delay per step (total 16 ms for 8 steps)
+        digitalWrite(IN1_PIN, steps[j][3]);
+        digitalWrite(IN2_PIN, steps[j][2]);
+        digitalWrite(IN3_PIN, steps[j][1]);
+        digitalWrite(IN4_PIN, steps[j][0]);
+        delay(2);
       }
     }
-  } else {
-    stepIndex = (stepIndex - 32 + 32) % 32; // Move 8 steps counterclockwise
+    Serial.println("Moved 1 mph clockwise");
   }
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 4; j++) {
-      digitalWrite(IN1_PIN, steps[j][0]);
-      digitalWrite(IN2_PIN, steps[j][1]);
-      digitalWrite(IN3_PIN, steps[j][2]);
-      digitalWrite(IN4_PIN, steps[j][3]);
-      delay(2); // 2 ms delay per step (total 16 ms for 8 steps)
+  else {
+    for (int i = 7; i > -1; i--) {
+      for (int j = 3; j > -1; j--) {
+        digitalWrite(IN1_PIN, steps[j][3]);
+        digitalWrite(IN2_PIN, steps[j][2]);
+        digitalWrite(IN3_PIN, steps[j][1]);
+        digitalWrite(IN4_PIN, steps[j][0]);
+        delay(2);
+      }
     }
+    Serial.println("Moved 1 mph counterclockwise");
   }
-  // Serial.print("Moved 8 steps "); Serial.println(forward ? "clockwise" : "counterclockwise");
 }
 
-// Stop the motor
 void stopMotor() {
   digitalWrite(IN1_PIN, LOW);
   digitalWrite(IN2_PIN, LOW);
@@ -77,26 +77,23 @@ void stopMotor() {
 
 // Update stepper position based on vehicle speed, moving 8 steps at a time
 void processSensorInput(float vehicleSpeed) {
-
-  targetStepPosition = round(vehicleSpeed * stepMultiplier); // e.g., 5 mph = 40 steps
+  targetStepPosition = round(vehicleSpeed) * stepMultiplier; // e.g.,
 
   Serial.print("vehicleSpeed: "); Serial.print(vehicleSpeed);
   Serial.print(" | targetStepPosition: "); Serial.print(targetStepPosition);
   Serial.print(" | currentStepPosition: "); Serial.println(currentStepPosition);
 
   unsigned long currentTime = millis();
-  if (currentTime - lastStepTime >= stepInterval) {
-    while (currentStepPosition < targetStepPosition) {
-      moveEightSteps(true); // Clockwise (true)
-      currentStepPosition += 32;
-      lastStepTime = currentTime;
-      Serial.println("Increased by 8 steps clockwise");
-    }
-    while (currentStepPosition > targetStepPosition) {
-      moveEightSteps(false); // Counterclockwise (false)
-      currentStepPosition -= 32;
-      lastStepTime = currentTime;
-      Serial.println("Decreased by 8 steps counterclockwise");
-    }
+  while (currentStepPosition < targetStepPosition) {
+    moveEightSteps(true); // Clockwise (true)
+    currentStepPosition += 32;
+    lastStepTime = currentTime;
+    //Serial.println("Increased by 8 steps clockwise");
+  }
+  while (currentStepPosition > targetStepPosition) {
+    moveEightSteps(false); // Counterclockwise (false)
+    currentStepPosition -= 32;
+    lastStepTime = currentTime;
+    //Serial.println("Decreased by 8 steps counterclockwise");
   }
 }
