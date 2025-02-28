@@ -16,7 +16,7 @@ void initDataLogger(String fileName) {
 }
 
 String generateFileName() {
-  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   DateTime now = rtc.now();
   // Format the file name as mm.dd.yyyy_hhmm.csv
   char buffer[24];
@@ -27,12 +27,25 @@ String generateFileName() {
   return String(buffer);
 }
 
-void logData(String fileName, float timeElapsed, float cvtTemp, float portalTemp, float gearboxTemp, float pitch, float roll, float vehicleSpeed) {
+String getFormattedTime() {
+  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  DateTime log = rtc.now();
+  char hhmmss[12];  // "hh:mm:ss" + null terminator
+  snprintf(hhmmss, sizeof(hhmmss), "%02d:%02d:%02d", 
+            log.hour(), log.minute(), log.second());
+  return String(hhmmss); // Return formatted time as a String
+}
+
+void logData(String fileName, String timeLogged, float cvtTemp, float portalTemp, float gearboxTemp, float pitch, float roll, float vehicleSpeed) {
   // Convert String to const char*
   const char *fileNameChar = fileName.c_str();
   File dataFile = SD.open(fileNameChar, FILE_WRITE);
   if (dataFile) {
-    dataFile.print(timeElapsed);
+    //String timeLogged = getFormattedTime();
+
+    Serial.print("timeLogged:");
+    Serial.println(timeLogged);
+    dataFile.print(timeLogged); // change to RTC time hhmmss
     dataFile.print(",");
     dataFile.print(cvtTemp);
     dataFile.print(",");

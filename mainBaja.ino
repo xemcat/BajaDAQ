@@ -12,11 +12,13 @@ Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 Adafruit_MPU6050 mpu = Adafruit_MPU6050();
 RTC_DS3231 rtc;
 String fileName;
+String timeLogged;
 
 // Define Data Switch
 const int dataSwitchPin = 2;      // Use pin 2 for the switch
 bool collectingData = false;      // Flag for data collection
-unsigned long startDataTime = 0;  // Store the start time
+unsigned long loopRunningTime = 0;
+unsigned long logTime = 15;
 
 // Forward declarations
 void mlxInit();             // CVT Temperature
@@ -29,12 +31,16 @@ void calculateRifeData();
 void hallInit();            // Vehicle Speed
 void calculateHallData();
 void displayHallData();
-// void stepperInit();         // Stepper Motor and Limit Switch
-// void rotateMotor(int stepsToMove, bool forward);
-// void stopMotor();
-// void processSensorInput(float vehicleSpeed);
-// void nanoInit();            // Arduino Nano
-// void nanoCommunication();
+void stepperInit();         // Stepper Motor and Limit Switch
+void processSensorInput(float vehicleSpeed);
+void moveEightSteps(bool forward);
+float getVehicleSpeed();    // From hall sensor file
+float getCVTTemp();         // Placeholder
+float getPortalTemp();      // Placeholder
+float getGearboxTemp();     // Placeholder
+float getVehiclePitch();    // Placeholder
+float getVehicleRoll();     // Placeholder
+String getFormattedTime();
 
 void setup() {
   Serial.begin(9600);
@@ -50,8 +56,8 @@ void setup() {
   rifeInit();         // Initialize RIFE Portal
   hallInit();         // Initialize Hall Effect
   Serial.println("MLX MPU RIFE HALL done");
-  // stepperInit();      // Initialize Stepper and Limit Switch
-  // Serial.println("STEP LIMIT done");
+  stepperInit();      // Initialize Stepper and Limit Switch
+  Serial.println("STEP LIMIT done");
 
   fileName = generateFileName();
   initDataLogger(fileName);
@@ -60,14 +66,12 @@ void setup() {
 }
 
 void loop() {
-  // float vehicleSpeed = getVehicleSpeed();  // Get speed from Hall sensor
-  // processSensorInput(vehicleSpeed);        // Pass speed to stepper control
+  unsigned long loopStartTime = millis();
   int switchState = digitalRead(dataSwitchPin); // Read the switch state
   if (switchState == HIGH) {
     if (!collectingData) {
       collectingData = true;
-      startDataTime = millis();
-      Serial.println("Data collection started."); 
+      Serial.println("Data collection started.");
     }
   } else {
     if (collectingData) {
@@ -76,24 +80,57 @@ void loop() {
     }
   }
 
-  if (collectingData) {
-    calculateMLXData();
-    calculateMPUData();
-    displayMPUData();
-    calculateRifeData();
-    calculateHallData();
-    displayHallData();
+  calculateMLXData();
+  calculateMPUData();
+  displayMPUData();
+  calculateRifeData();
+  calculateHallData();
+  displayHallData();
+  float vehicleSpeed = getVehicleSpeed();
+  processSensorInput(vehicleSpeed);
+  getFormattedTime();
+  Serial.println(loopStartTime);
 
+  loopRunningTime = loopRunningTime + (millis() - loopStartTime);
+  Serial.println(loopRunningTime);
+  Serial.println(getFormattedTime());
+  delay(1000);
+
+  if (loopRunningTime >= logTime) {
     float cvtTemp = getCVTTemp();
     float portalTemp = getPortalTemp();
     float gearboxTemp = getGearboxTemp();
     float pitch = getVehiclePitch();
     float roll = getVehicleRoll();
     float speed = getVehicleSpeed();
-    unsigned long timeElapsed = millis() - startDataTime;
-    //unsigned long startDataTime = startDataTime;
+    timeLogged = getFormattedTime();
 
-    logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
-    delay(1000);
+    logData(fileName, timeLogged, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+    loopRunningTime = 0;
+    Serial.println("Data Logged ***************************************************************");
+    delay(2000);
   }
+
+  // while(millis()-loopTime > 20) {
+  //   float cvtTemp = getCVTTemp();
+  //   float portalTemp = getPortalTemp();
+  //   float gearboxTemp = getGearboxTemp();
+  //   float pitch = getVehiclePitch();
+  //   float roll = getVehicleRoll();
+  //   float speed = getVehicleSpeed();
+  //   unsigned long timeElapsed = millis() - startDataTime;
+
+  //   logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+  // }
+  // if (loopTime < logTime) {
+  //   float cvtTemp = getCVTTemp();
+  //   float portalTemp = getPortalTemp();
+  //   float gearboxTemp = getGearboxTemp();
+  //   float pitch = getVehiclePitch();
+  //   float roll = getVehicleRoll();
+  //   float speed = getVehicleSpeed();
+  //   unsigned long timeElapsed = millis() - startDataTime;
+
+  //   logData(fileName, timeElapsed, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+  //   //delay(1000); // Data logging interval
 }
