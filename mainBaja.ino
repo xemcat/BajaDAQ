@@ -44,7 +44,7 @@ String getFormattedTime();
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
+  //while (!Serial);
   Serial.println("Starting Project...");
   if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
