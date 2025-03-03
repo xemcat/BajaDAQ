@@ -7,31 +7,31 @@
 #include <TimeLib.h>
 #include <RTClib.h>
 
-// Declare global sensor objects and files
+// Declare global sensor objects
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
 Adafruit_MPU6050 mpu = Adafruit_MPU6050();
 RTC_DS3231 rtc;
 String fileName;
-String timeLogged;
 
 // Define Data Switch
-const int dataSwitchPin = 2;      // Use pin 2 for the switch
-bool collectingData = false;      // Flag for data collection
+const int dataSwitchPin = 2;
+bool collectingData = false;
 unsigned long loopRunningTime = 0;
-unsigned long logTime = 15;
+unsigned long logTime = 15; // 1 second for stability
+unsigned long timeElapsed = 0;
 
-// Forward declarations
-void mlxInit();             // CVT Temperature
+// Forward declarations for sensor functions
+void mlxInit();
 void calculateMLXData();
-void mpuInit();             // Vehicle Orientation
+void mpuInit();
 void calculateMPUData();
 void displayMPUData();
-void rifeInit();            // Portal and Gearbox Oil Temperatures
+void rifeInit();
 void calculateRifeData();
-void hallInit();            // Vehicle Speed
+void hallInit();
 void calculateHallData();
 void displayHallData();
-void stepperInit();         // Stepper Motor and Limit Switch
+void stepperInit();
 void processSensorInput(float vehicleSpeed);
 void moveEightSteps(bool forward);
 float getVehicleSpeed();
@@ -40,38 +40,47 @@ float getPortalTemp();
 float getGearboxTemp();
 float getVehiclePitch();
 float getVehicleRoll();
-String getFormattedTime();
+
+// Forward declarations for data storage functions (defined in dataStorage.ino)
+void setupRTC();
+void initDataLogger(String fileName);
+void logData(String fileName, float cvtTemp, float portalTemp, float gearboxTemp, float pitch, float roll, float vehicleSpeed);
+String generateFileName();
 
 void setup() {
   Serial.begin(9600);
-  //while (!Serial);
   Serial.println("Starting Project...");
-  if (!rtc.begin()) {
-    Serial.println("Couldn't find RTC");
-    while(1);
-  }
-  Serial.println("Initializing");
-  mlxInit();          // Initialize MLX90614
-  mpuInit();          // Initialize MPU6050
-  rifeInit();         // Initialize RIFE Portal
-  hallInit();         // Initialize Hall Effect
+
+  // Initialize RTC and SD from dataStorage.ino
+  setupRTC();
+  fileName = generateFileName();
+  Serial.println("File name: " + fileName);
+  initDataLogger(fileName);
+
+  // Initialize sensors
+  Serial.println("Initializing sensors...");
+  mlxInit();
+  mpuInit();
+  rifeInit();
+  hallInit();
   Serial.println("MLX MPU RIFE HALL done");
-  stepperInit();      // Initialize Stepper and Limit Switch
+  stepperInit();
   Serial.println("STEP LIMIT done");
 
-  fileName = generateFileName();
-  initDataLogger(fileName);
-  pinMode(dataSwitchPin, INPUT_PULLUP);     // Configure switch pin with pull-up
+  pinMode(dataSwitchPin, INPUT_PULLUP);
   Serial.println("Flip the switch to start or stop data collection.");
 }
 
 void loop() {
   unsigned long loopStartTime = millis();
-  int switchState = digitalRead(dataSwitchPin); // Read the switch state
+  int switchState = digitalRead(dataSwitchPin);
   if (switchState == HIGH) {
     if (!collectingData) {
       collectingData = true;
-      Serial.println("Data collection started.");
+      Serial.println("Data collection started with file: " + fileName);
+      // Uncomment to set RTC time when collection starts
+      // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+      timeElapsed = millis();
     }
   } else {
     if (collectingData) {
@@ -80,6 +89,7 @@ void loop() {
     }
   }
 
+  // Sensor calculations (placeholders)
   calculateMLXData();
   calculateMPUData();
   displayMPUData();
@@ -88,26 +98,22 @@ void loop() {
   displayHallData();
   float vehicleSpeed = getVehicleSpeed();
   processSensorInput(vehicleSpeed);
-  getFormattedTime();
-  Serial.println(loopStartTime);
 
-  loopRunningTime = loopRunningTime + (millis() - loopStartTime);
+  loopRunningTime += (millis() - loopStartTime);
   Serial.println(loopRunningTime);
-  Serial.println(getFormattedTime());
   delay(1000);
 
-  if (loopRunningTime >= logTime) {
+  if (loopRunningTime >= logTime && collectingData) {
+    Serial.println("Logging to file: " + fileName);
     float cvtTemp = getCVTTemp();
     float portalTemp = getPortalTemp();
     float gearboxTemp = getGearboxTemp();
     float pitch = getVehiclePitch();
     float roll = getVehicleRoll();
     float speed = getVehicleSpeed();
-    timeLogged = getFormattedTime();
-
-    logData(fileName, timeLogged, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+    logData(fileName, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
+    Serial.println("Data Logged **********************************************************************************");
     loopRunningTime = 0;
-    Serial.println("Data Logged ***************************************************************");
-    delay(2000);
+    delay(5000);
   }
 }
