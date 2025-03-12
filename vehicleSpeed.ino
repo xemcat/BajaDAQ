@@ -2,6 +2,7 @@
 volatile unsigned long lastPulseTime = 0;   // Timestamp of the last pulse
 volatile unsigned long pulseInterval = 0;   // Time between two consecutive pulses
 float wheelCircumference = 2.1;             // Circumference of the wheel in meters
+const int pulsesPerWheel = 12;
 float vehicleSpeed = 0.0;                   // Vehicle speed in mph
 unsigned long lastCalculationTime = 0;      // Timestamp for the last speed calculation
 unsigned long timeout = 1000000;            // 1 second timeout (in microseconds)
@@ -43,7 +44,8 @@ void calculateHallData() {
   }
   if (pulseInterval > 0) {
     // Calculate speed: speed (m/s) = circumference / time per revolution
-    vehicleSpeed = (wheelCircumference / (pulseInterval / 1e6)); // m/s
+    float distancePerPulse = wheelCircumference / pulsesPerWheel;
+    vehicleSpeed = (distancePerPulse / (pulseInterval / 1e6)); // m/s
     // Convert to mph: 1 m/s = 2.23694 mph
     vehicleSpeed *= 2.23694;
   } else {
@@ -52,9 +54,9 @@ void calculateHallData() {
 }
 
 void displayHallData() {
-  Serial.println("Vehicle Speed:");
-  Serial.print("   Speed: "); Serial.print(vehicleSpeed); Serial.println(" mph");
-  Serial.print("   Magnet Count: "); Serial.println(magnetCount);
+  // Serial.println("Vehicle Speed:");
+  // Serial.print("   Speed: "); Serial.print(vehicleSpeed); Serial.println(" mph");
+  // Serial.print("   Magnet Count: "); Serial.println(magnetCount);
 }
 
 float getVehicleSpeed() {

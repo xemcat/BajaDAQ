@@ -1,8 +1,8 @@
 extern Adafruit_MLX90614 mlx;
 
-const int ledCVTPin = 3;             // Channel 1 for CVT Belt Temp
-const float TEMP_CVT_ON = 71.0;      // CVT Belt Temp threshold ON (°F)  CHANGE TO 285
-const float TEMP_CVT_OFF = 68.0;     // CVT Belt Temp threshold OFF (°F) CHANGE TO 244
+// const int ledCVTPin = 3;             // Channel 1 for CVT Belt Temp
+const float TEMP_CVT_ON = 285.0;      // CVT Belt Temp threshold ON (°F)  CHANGE TO 285
+const float TEMP_CVT_OFF = 244.0;     // CVT Belt Temp threshold OFF (°F) CHANGE TO 244
 float cvtTemp = 0.0;                 // Globally define cvtTemp
 float ambientTemp = 0.0;             // Globally define ambientTemp
 bool blinkCVT = false;
@@ -15,7 +15,7 @@ void mlxInit() {
   }
   pinMode(ledCVTPin, OUTPUT);
   analogWrite(ledCVTPin, 0);         // Ensure LED is off at the start
-}
+  }
 
 void calculateMLXData() {
   float cvtTempC = mlx.readObjectTempC();
@@ -23,17 +23,17 @@ void calculateMLXData() {
   float ambientTempC = mlx.readAmbientTempC();
   ambientTemp = (ambientTempC * 9.0 / 5.0) + 32.0;
   
-  Serial.println("CVT: ");
-  Serial.print("   Object Temperature: "); Serial.print(cvtTemp); Serial.println(" °F");
-  Serial.print("   Ambient Temperature: "); Serial.print(ambientTemp); Serial.println(" °F");
+  // Serial.println("CVT: ");
+  // Serial.print("   Object Temperature: "); Serial.print(cvtTemp); Serial.println(" °F");
+  // Serial.print("   Ambient Temperature: "); Serial.print(ambientTemp); Serial.println(" °F");
 
   if (cvtTemp > TEMP_CVT_ON) {
-    analogWrite(ledCVTPin, 15);
+    analogWrite(ledCVTPin, 8);
   } else if (cvtTemp < TEMP_CVT_ON && cvtTemp > TEMP_CVT_OFF) {
     if (!blinkCVT) {
-      analogWrite(ledCVTPin, 15);
+      analogWrite(ledCVTPin, 8);
       blinkCVTCount = blinkCVTCount + 1;
-      if (blinkCVTCount == 5) {
+      if (blinkCVTCount == 100) {
         blinkCVT = true;
       }
     }

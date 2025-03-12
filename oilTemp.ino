@@ -1,17 +1,17 @@
 // Portal Temp
 const int tempPortalPin = A0;
-const int ledPortalPin = 4;             // Channel 2 for Portal Oil Temp
-const float TEMP_PORTAL_ON = 70.0;      // Portal Temp threshold ON (°F)   CHANGE TO 285
-const float TEMP_PORTAL_OFF = 60.0;     // Portal Temp threshold OFF (°F)  CHANGE TO 245
+// const int ledPortalPin = 4;             // Channel 2 for Portal Oil Temp
+const float TEMP_PORTAL_ON = 285.0;      // Portal Temp threshold ON (°F)   CHANGE TO 285
+const float TEMP_PORTAL_OFF = 244.0;     // Portal Temp threshold OFF (°F)  CHANGE TO 244
 float portalTemp = 0.0;                 // Globally define portalTemp
 bool blinkPortal = false;
 int blinkPortalCount = 0;
 
 // Gearbox Temp
 const int tempGearboxPin = A1;
-const int ledGearboxPin = 5;            // Channel 3 for Gearbox Oil Temp
-const float TEMP_GEARBOX_ON = 70.0;     // Gearbox Temp threshold ON (°F)  CHANGE TO 285
-const float TEMP_GEARBOX_OFF = 60.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 245
+// const int ledGearboxPin = 5;            // Channel 3 for Gearbox Oil Temp
+const float TEMP_GEARBOX_ON = 285.0;     // Gearbox Temp threshold ON (°F)  CHANGE TO 285
+const float TEMP_GEARBOX_OFF = 244.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 244
 float gearboxTemp = 0.0;                // Globally define gearboxTemp
 bool blinkingLEDGearbox = false;
 bool blinkGearbox = false;
@@ -79,21 +79,21 @@ void calculateRifeData() {
   float gearboxResistance = gearboxVoltage / gearboxCurrent;                        // Find variable resistance
   gearboxTemp = interpolateGearboxTemperature(gearboxResistance);                   // Get temperature from resistance
 
-  Serial.println("Portal: ");
-  Serial.print("   Voltage: "); Serial.print(portalVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(portalResistance); Serial.println(" Ω");
-  Serial.print("   Temperature: "); Serial.print(portalTemp); Serial.println(" °F");
-  Serial.println("Gearbox: ");
-  Serial.print("   Voltage: "); Serial.print(gearboxVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(gearboxResistance); Serial.println(" Ω");
-  Serial.print("   Temperature: "); Serial.print(gearboxTemp); Serial.println(" °F");
+  // Serial.println("Portal: ");
+  // Serial.print("   Voltage: "); Serial.print(portalVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(portalResistance); Serial.println(" Ω");
+  // Serial.print("   Temperature: "); Serial.print(portalTemp); Serial.println(" °F");
+  // Serial.println("Gearbox: ");
+  // Serial.print("   Voltage: "); Serial.print(gearboxVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(gearboxResistance); Serial.println(" Ω");
+  // Serial.print("   Temperature: "); Serial.print(gearboxTemp); Serial.println(" °F");
  
   // Portal Temp
   if (portalTemp > TEMP_PORTAL_ON) {
-    analogWrite(ledPortalPin, 15);
+    analogWrite(ledPortalPin, 8);
   } else if (portalTemp < TEMP_PORTAL_ON && portalTemp > TEMP_PORTAL_OFF) {
     if (!blinkPortal) {
-      analogWrite(ledPortalPin, 15);
+      analogWrite(ledPortalPin, 8);
       blinkPortalCount = blinkPortalCount + 1;
-      if (blinkPortalCount == 5) {
+      if (blinkPortalCount == 100) {
         blinkPortal = true;
       }
     }
@@ -110,12 +110,12 @@ void calculateRifeData() {
 
   // Gearbox Temp
   if (gearboxTemp > TEMP_GEARBOX_ON) {
-    analogWrite(ledGearboxPin, 15);
+    analogWrite(ledGearboxPin, 8);
   } else if (gearboxTemp < TEMP_GEARBOX_ON && gearboxTemp > TEMP_GEARBOX_OFF) {
     if (!blinkGearbox) {
-      analogWrite(ledGearboxPin, 15);
+      analogWrite(ledGearboxPin, 8);
       blinkGearboxCount = blinkGearboxCount + 1;
-      if (blinkGearboxCount == 5) {
+      if (blinkGearboxCount == 100) {
         blinkGearbox = true;
       }
     }

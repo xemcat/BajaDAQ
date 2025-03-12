@@ -27,9 +27,9 @@ void calculateMPUData() {
 }
 
 void displayMPUData() {
-  Serial.println("Orientation:");
-  Serial.print("   Pitch: "); Serial.print(pitch); Serial.println("°");
-  Serial.print("   Roll: "); Serial.print(roll); Serial.println("°");
+  // Serial.println("Orientation:");
+  // Serial.print("   Pitch: "); Serial.print(pitch); Serial.println("°");
+  // Serial.print("   Roll: "); Serial.print(roll); Serial.println("°");
 }
 
 float getVehiclePitch() {

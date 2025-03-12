@@ -27,17 +27,7 @@ void stepperInit() {
   pinMode(IN2_PIN, OUTPUT);
   pinMode(IN3_PIN, OUTPUT);
   pinMode(IN4_PIN, OUTPUT);
-  pinMode(LIMIT_SWITCH_PIN, INPUT_PULLUP); // Internal pull-up resistor
-
-  Serial.println("Moving to 0mph...");
-  while (digitalRead(LIMIT_SWITCH_PIN) == HIGH) {
-    moveEightSteps(false); // Move counterclockwise (false)
-    delay(2);              // Small delay during calibration
-  }
-  stopMotor();
-  currentStepPosition = 0;
-  targetStepPosition = 0;
-  Serial.println("Limit switch reached, motor stopped.");
+  pinMode(LIMIT_SWITCH_PIN, INPUT_PULLUP);
 }
 
 // Move the motor 8 steps: true = clockwise, false = counterclockwise
@@ -52,7 +42,7 @@ void moveEightSteps(bool forward) {
         delay(2);
       }
     }
-    Serial.println("Moved 1 mph clockwise");
+    //Serial.println("Moved 1 mph clockwise");
   }
   else {
     for (int i = 7; i > -1; i--) {
@@ -64,7 +54,7 @@ void moveEightSteps(bool forward) {
         delay(2);
       }
     }
-    Serial.println("Moved 1 mph counterclockwise");
+    //Serial.println("Moved 1 mph counterclockwise");
   }
 }
 
@@ -79,9 +69,9 @@ void stopMotor() {
 void processSensorInput(float vehicleSpeed) {
   targetStepPosition = round(vehicleSpeed) * stepMultiplier; // e.g.,
 
-  Serial.print("vehicleSpeed: "); Serial.print(vehicleSpeed);
-  Serial.print(" | targetStepPosition: "); Serial.print(targetStepPosition);
-  Serial.print(" | currentStepPosition: "); Serial.println(currentStepPosition);
+  // Serial.print("vehicleSpeed: "); Serial.print(vehicleSpeed);
+  // Serial.print(" | targetStepPosition: "); Serial.print(targetStepPosition);
+  // Serial.print(" | currentStepPosition: "); Serial.println(currentStepPosition);
 
   unsigned long currentTime = millis();
   while (currentStepPosition < targetStepPosition) {
