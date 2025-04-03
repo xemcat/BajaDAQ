@@ -8,10 +8,10 @@
 #include <RTClib.h>
 
 #define LIMIT_SWITCH_PIN 20
-const int ledCVTPin = 3;             // Channel 1 for CVT Belt Temp
-const int ledPortalPin = 4;          // Channel 2 for Portal Oil Temp
-const int ledGearboxPin = 5;         // Channel 3 for Gearbox Oil Temp
-
+// const int ledCVTPin = 3;             // Channel 1 for CVT Belt Temp
+// const int ledPortalPin = 4;          // Channel 2 for Portal Oil Temp
+// const int ledGearboxPin = 5;         // Channel 3 for Gearbox Oil Temp
+// const int ledFWDPin = 41;
 
 // Declare global sensor objects
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
@@ -23,7 +23,7 @@ String fileName;
 const int dataSwitchPin = 2;
 bool collectingData = false;
 unsigned long loopRunningTime = 0;
-unsigned long logTime = 15; // 1 second for stability
+unsigned long logTime = 1000;
 unsigned long timeElapsed = 0;
 
 // Forward declarations for sensor functions
@@ -36,10 +36,12 @@ void rifeInit();
 void calculateRifeData();
 void hallInit();
 void calculateHallData();
-//void displayHallData();
+void displayHallData();
 void stepperInit();
+void nanoInit();
 void processSensorInput(float vehicleSpeed);
 void moveEightSteps(bool forward);
+void nanoCommunication();
 float getVehicleSpeed();
 float getCVTTemp();
 float getPortalTemp();
@@ -57,22 +59,31 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Starting Project...");
   setupRTC();
+  Serial.println("RTC Setup");
   fileName = generateFileName();
   Serial.println("File name: " + fileName);
   initDataLogger(fileName);
   mlxInit();
+  Serial.println("MLX GOOD");
   mpuInit();
+  Serial.println("MPU GOOD");
   rifeInit();
+  Serial.println("OIL GOOD");
   hallInit();
-  //Serial.println(digitalRead(LIMIT_SWITCH_PIN));
+  Serial.println("HALL GOOD");
+  nanoInit();
+  Serial.println("NANO GOOD");
+  Serial.println(digitalRead(LIMIT_SWITCH_PIN));
   stepperInit();
   pinMode(dataSwitchPin, INPUT_PULLUP);
   Serial.println("Flip the switch to start or stop data collection.");
 }
 
 void loop() {
+  Serial.println("LOOP STARTED");
   unsigned long loopStartTime = millis();
   int switchState = digitalRead(dataSwitchPin);
+   Serial.println("Switch State Read");
   if (switchState == HIGH) {
     if (!collectingData) {
       collectingData = true;
@@ -81,6 +92,7 @@ void loop() {
         moveEightSteps(false);
         delay(2);
       }
+      Serial.println("HERE");
       stopMotor();
       // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
       timeElapsed = millis();
@@ -89,26 +101,32 @@ void loop() {
     if (collectingData) {
       collectingData = false;
       digitalRead(!LIMIT_SWITCH_PIN);
-      analogWrite(ledCVTPin, 0);
-      analogWrite(ledPortalPin, 0);
-      analogWrite(ledGearboxPin, 0);
+      // analogWrite(ledCVTPin, 0);
+      // analogWrite(ledPortalPin, 0);
+      // analogWrite(ledGearboxPin, 0);
       Serial.println("Data collection stopped.");
     }
   }
 
   // Sensor calculations (placeholders)
+  nanoCommunication();
+  Serial.println("NANO GOOD");
   calculateMLXData();
+  Serial.println("calculateMLXData");
   calculateMPUData();
+  Serial.println("calculateMPUData");
   displayMPUData();
+  Serial.println("displayMPUData");
   calculateRifeData();
+  Serial.println("calculateRifeData");
   calculateHallData();
-  //displayHallData();
+  displayHallData();
   float vehicleSpeed = getVehicleSpeed();
   processSensorInput(vehicleSpeed);
 
   loopRunningTime += (millis() - loopStartTime);
-  // Serial.println(loopRunningTime);
-  //delay(1000);
+  Serial.println(loopRunningTime);
+  delay(1000);
 
   if (loopRunningTime >= logTime && collectingData) {
     Serial.println("Logging to file: " + fileName);
@@ -121,6 +139,6 @@ void loop() {
     logData(fileName, cvtTemp, portalTemp, gearboxTemp, pitch, roll, speed);
     Serial.println("Data Logged **********************************************************************************");
     loopRunningTime = 0;
-    //delay(5000);
+    delay(5000);
   }
 }

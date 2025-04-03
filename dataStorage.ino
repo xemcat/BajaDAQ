@@ -2,7 +2,6 @@ void setupRTC() {
   Wire1.begin();
   if (!rtc.begin(&Wire1)) {
     Serial.println("Failed to detect DS3231 RTC! Check connections.");
-    while (1);
   }
   Serial.println("DS3231 RTC initialized successfully!");
   // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));

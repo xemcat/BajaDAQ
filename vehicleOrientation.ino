@@ -4,10 +4,9 @@ float pitch = 0.0;
 float roll = 0.0;
 
 void mpuInit() {
-  Serial.begin(115200);
   if (!mpu.begin()) {
     Serial.println("Failed to find MPU6050 chip. Check wiring!");
-    while (1);
+  //   while (1);
   }
   mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
   mpu.setGyroRange(MPU6050_RANGE_250_DEG);
@@ -27,9 +26,9 @@ void calculateMPUData() {
 }
 
 void displayMPUData() {
-  // Serial.println("Orientation:");
-  // Serial.print("   Pitch: "); Serial.print(pitch); Serial.println("°");
-  // Serial.print("   Roll: "); Serial.print(roll); Serial.println("°");
+  Serial.println("Orientation:");
+  Serial.print("   Pitch: "); Serial.print(pitch); Serial.println("°");
+  Serial.print("   Roll: "); Serial.print(roll); Serial.println("°");
 }
 
 float getVehiclePitch() {

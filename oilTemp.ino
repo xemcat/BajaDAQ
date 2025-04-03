@@ -1,17 +1,17 @@
 // Portal Temp
 const int tempPortalPin = A0;
-// const int ledPortalPin = 4;             // Channel 2 for Portal Oil Temp
-const float TEMP_PORTAL_ON = 285.0;      // Portal Temp threshold ON (°F)   CHANGE TO 285
-const float TEMP_PORTAL_OFF = 244.0;     // Portal Temp threshold OFF (°F)  CHANGE TO 244
+const int ledPortalPin = 4;             // Channel 2 for Portal Oil Temp
+const float TEMP_PORTAL_ON = 85.0;      // Portal Temp threshold ON (°F)   CHANGE TO 285
+const float TEMP_PORTAL_OFF = 45.0;     // Portal Temp threshold OFF (°F)  CHANGE TO 244
 float portalTemp = 0.0;                 // Globally define portalTemp
 bool blinkPortal = false;
 int blinkPortalCount = 0;
 
 // Gearbox Temp
 const int tempGearboxPin = A1;
-// const int ledGearboxPin = 5;            // Channel 3 for Gearbox Oil Temp
+const int ledGearboxPin = 5;            // Channel 3 for Gearbox Oil Temp
 const float TEMP_GEARBOX_ON = 285.0;     // Gearbox Temp threshold ON (°F)  CHANGE TO 285
-const float TEMP_GEARBOX_OFF = 244.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 244
+const float TEMP_GEARBOX_OFF = 245.0;    // Gearbox Temp threshold OFF (°F) CHANGE TO 244
 float gearboxTemp = 0.0;                // Globally define gearboxTemp
 bool blinkingLEDGearbox = false;
 bool blinkGearbox = false;
@@ -31,7 +31,7 @@ const float analogMax = 1023;               // Max analog value read from sensor
 void rifeInit() {
   if (!analogRead(tempPortalPin)) {
     Serial.println("Error: Could not find a valid RIFE portal sensor!");
-    //while (1);                              // Stop execution if initialization fails
+  //   while (1);                              // Stop execution if initialization fails
   }
   // Portal Temp
   pinMode(ledPortalPin, OUTPUT);
@@ -79,12 +79,12 @@ void calculateRifeData() {
   float gearboxResistance = gearboxVoltage / gearboxCurrent;                        // Find variable resistance
   gearboxTemp = interpolateGearboxTemperature(gearboxResistance);                   // Get temperature from resistance
 
-  // Serial.println("Portal: ");
-  // Serial.print("   Voltage: "); Serial.print(portalVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(portalResistance); Serial.println(" Ω");
-  // Serial.print("   Temperature: "); Serial.print(portalTemp); Serial.println(" °F");
-  // Serial.println("Gearbox: ");
-  // Serial.print("   Voltage: "); Serial.print(gearboxVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(gearboxResistance); Serial.println(" Ω");
-  // Serial.print("   Temperature: "); Serial.print(gearboxTemp); Serial.println(" °F");
+  Serial.println("Portal: ");
+  Serial.print("   Voltage: "); Serial.print(portalVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(portalResistance); Serial.println(" Ω");
+  Serial.print("   Temperature: "); Serial.print(portalTemp); Serial.println(" °F");
+  Serial.println("Gearbox: ");
+  Serial.print("   Voltage: "); Serial.print(gearboxVoltage); Serial.print(" V    "); Serial.print("Resistance: "); Serial.print(gearboxResistance); Serial.println(" Ω");
+  Serial.print("   Temperature: "); Serial.print(gearboxTemp); Serial.println(" °F");
  
   // Portal Temp
   if (portalTemp > TEMP_PORTAL_ON) {

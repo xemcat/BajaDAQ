@@ -69,20 +69,20 @@ void stopMotor() {
 void processSensorInput(float vehicleSpeed) {
   targetStepPosition = round(vehicleSpeed) * stepMultiplier; // e.g.,
 
-  // Serial.print("vehicleSpeed: "); Serial.print(vehicleSpeed);
-  // Serial.print(" | targetStepPosition: "); Serial.print(targetStepPosition);
-  // Serial.print(" | currentStepPosition: "); Serial.println(currentStepPosition);
+  Serial.print("vehicleSpeed: "); Serial.print(vehicleSpeed);
+  Serial.print(" | targetStepPosition: "); Serial.print(targetStepPosition);
+  Serial.print(" | currentStepPosition: "); Serial.println(currentStepPosition);
 
   unsigned long currentTime = millis();
   while (currentStepPosition < targetStepPosition) {
     moveEightSteps(true); // Clockwise (true)
-    currentStepPosition += 32;
+    currentStepPosition += stepMultiplier;
     lastStepTime = currentTime;
     //Serial.println("Increased by 8 steps clockwise");
   }
   while (currentStepPosition > targetStepPosition) {
     moveEightSteps(false); // Counterclockwise (false)
-    currentStepPosition -= 32;
+    currentStepPosition -= stepMultiplier;
     lastStepTime = currentTime;
     //Serial.println("Decreased by 8 steps counterclockwise");
   }
