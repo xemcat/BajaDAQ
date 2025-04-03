@@ -1,4 +1,4 @@
-# Baja Vehicle Data Logger
+# 2024-2025 Union Baja SAE: Data Acquisition and Display System for Increased Vehicle Performance
 
 This project is a data logging and monitoring system designed for a Baja-style vehicle, built for real-time telemetry in rugged environments. It leverages a Teensy microcontroller to collect data from temperature sensors (CVT belt, portal oil, gearbox oil), a Hall effect sensor (speed), and an MPU6050 IMU (orientation), logging it to an SD card with timestamps from a DS3231 RTC. The system also drives LEDs for temperature alerts, communicates with an Arduino Nano for additional signaling, and uses a stepper motor to mechanically display vehicle speed.
 
@@ -13,8 +13,6 @@ This project, the **2024-2025 Union Baja SAE: Data Acquisition and Display Syste
 - **Have Fun**: The spirit of Baja is ingenuity and adventure—keep that alive!
 
 Not an official legal license, just my way of saying "enjoy, but play nice."
-
-If you have any questions, feel free to email me: emcatwatson@yahoo.com
 
 ## Features
 - **Temperature Monitoring**: Measures CVT belt temperature (MLX90614 IR sensor) and portal/gearbox oil temperatures (RIFE sensors), with LED alerts for thresholds.
