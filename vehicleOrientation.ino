@@ -1,3 +1,16 @@
+/*
+ * 2024-2025 Union Baja SAE: Data Acquisition and Display System for Increased Vehicle Performance
+ * File: vehicleOrientation.ino
+ * Author: xemcat
+ * 
+ * This code is released under the "Baja Open Garage License" (BOGL):
+ * - Use it for your Baja builds, learning, or tinkering.
+ * - Share it with credit to xemcat and the GitHub repo.
+ * - Modify it freely—let me know if you make it cooler!
+ * - No guarantees; use at your own risk.
+ * - Keep the Baja spirit: build, break, repeat.
+ */
+
 extern Adafruit_MPU6050 mpu;
 
 float pitch = 0.0;
