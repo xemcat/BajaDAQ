@@ -1,3 +1,16 @@
+/*
+ * 2024-2025 Union Baja SAE: Data Acquisition and Display System for Increased Vehicle Performance
+ * File: vehicleSpeed.ino
+ * Author: xemcat
+ * 
+ * This code is released under the "Baja Open Garage License" (BOGL):
+ * - Use it for your Baja builds, learning, or tinkering.
+ * - Share it with credit to xemcat and the GitHub repo.
+ * - Modify it freely—let me know if you make it cooler!
+ * - No guarantees; use at your own risk.
+ * - Keep the Baja spirit: build, break, repeat.
+ */
+
 #define hallSensorPin 6                     // Pin connected to the Hall effect sensor 
 volatile unsigned long lastPulseTime = 0;   // Timestamp of the last pulse
 volatile unsigned long pulseInterval = 0;   // Time between two consecutive pulses
