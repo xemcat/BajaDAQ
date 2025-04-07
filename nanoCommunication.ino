@@ -14,7 +14,7 @@
 #define TEENSY_OUT 11  // Teensy sends signal to Nano
 #define TEENSY_IN  12  // Teensy receives signal from Nano
 
-float fwdSpeedAlert = 25;   // Dangerous speed for fwd - change to 11? - miles comment
+float fwdSpeedAlert = 25;   // Dangerous speed for fwd 
 const int ledFWDPin = 13;   // Channel 1 for FWD Drive Engage
 
 void nanoInit() {
